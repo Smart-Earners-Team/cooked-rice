@@ -1,2 +1,2 @@
 # Cooked Rice
-The AVAX Reward Pool with the lowest Dev fes
+The AVAX Reward Pool with the lowest Dev fees

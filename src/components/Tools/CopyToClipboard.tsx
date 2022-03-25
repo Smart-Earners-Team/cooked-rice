@@ -29,7 +29,7 @@ export default function CopyToClipboard({
   };
 
   return (
-    <div className="relative w-full my-3 border-b-2 border-red-50/80">
+    <div className="relative w-full my-3 border-b-2 border-red-50 bg-white">
       <div className="bg-red-50 px-4 py-1 flex justify-between items-center">
         <div className="inline-block text-base">{title}</div>
         <button

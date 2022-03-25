@@ -5,7 +5,8 @@
 
 @layer base {
   body {
-    @apply font-sans h-screen text-gray-900 text-xl;
+    @apply font-sans text-gray-900 text-xl bg-red-50/40 bg-gradient-to-b
+      from-red-50/40 to-white;
   }
 
   h2 {

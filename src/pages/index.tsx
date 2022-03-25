@@ -127,8 +127,8 @@ const IndexPage = () => {
         <div className="lg:flex lg:justify-between">
           <div className="max-w-xl w-full">
             <p>The AVAX Reward Pool with the lowest Dev fes</p>
-            <div className="shadow my-6">
-              <div className="space-y-2 p-5 bg-red-50/60">
+            <div className="shadow my-6 bg-white">
+              <div className="space-y-2 p-5 bg-red-50/70">
                 <BalanceTextBox
                   lable="Contract"
                   value="200.099"
