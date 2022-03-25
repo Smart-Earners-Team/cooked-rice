@@ -1,0 +1,23 @@
+/* ./src/styles/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans h-screen text-gray-900 text-xl;
+  }
+
+  h2 {
+    @apply text-2xl my-3;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-sans font-bold leading-tight;
+  }
+}
