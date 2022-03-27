@@ -8,8 +8,6 @@ export const getAddress = (address: Address): string => {
 
 export const getMulticallAddress = () => getAddress(addresses.multiCall);
 
-export const getGffContractAddress = () => getAddress(addresses.gffContract);
+export const getRiceContractAddress = () => getAddress(addresses.riceContract);
 
-export const getGffAddress = () => getAddress(tokens.gff);
-
-export const getBusdAddress = () => getAddress(tokens.busd);
+export const getBnbAddress = () => getAddress(tokens.bnb)

@@ -13,17 +13,19 @@ export const BASE_BSC_SCAN_URLS = {
 export const BASE_BSC_SCAN_URL = BASE_BSC_SCAN_URLS[ChainId.MAINNET];
 
 export const tokens = {
-  gff: { 56: "0x5BC1dE85Fb09eDEefD54869cd8cFB20B30574CE8", 97: "" },
-  busd: {56: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56", 97: ""}
+  bnb: {
+    56: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+    97: "0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F",
+  },
 };
 export const addresses = {
   multiCall: {
     56: "0xfF6FD90A470Aaa0c1B8A54681746b07AcdFedc9B",
     97: "0x8F3273Fb89B075b1645095ABaC6ed17B2d4Bc576",
   },
-  gffContract: {
-    56: "0xc76c6ed1820d727e13E69625857B1Eda57431357",
-    97: "",
+  riceContract: {
+    56: "",
+    97: "0xbAd87ea70A47BD09416B3a15e30BF7386115D0e4",
   },
 };
 

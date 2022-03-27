@@ -9,7 +9,7 @@ const TOP_POSITION = 80; // Initial position from the top
 const ToastContainer: React.FC<ToastContainerProps> = ({
   toasts,
   onRemove,
-  delay = 60000,
+  delay = 5000,
   stackSpacing = 80,
 }) => {
   return (

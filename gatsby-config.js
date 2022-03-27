@@ -1,10 +1,17 @@
 module.exports = {
   siteMetadata: {
     name: "Cooked Rice",
-    siteUrl: "https://cooked-rice.com",
+    siteUrl: "https://cookedrice.io",
     title: "Cooked Rice",
     description: `The AVAX Reward Pool with the lowest Dev fes`,
-    socials: [/* { name: "telegramGroup", url: "https://t.me/GarfieldFamily" } */],
+    socials: [
+      { name: "telegramGroup", url: "https://t.me/CookRice" },
+      {
+        name: "twitter",
+        url: "https://twitter.com/CookedR1ce?t=rs8PW7Mp2jK0WaMOz6GQdQ&s=09",
+      },
+      { name: "discord", url: "https://discord.gg/U339xgaw" },
+    ],
   },
   plugins: [
     "gatsby-plugin-image",

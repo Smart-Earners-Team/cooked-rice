@@ -3,8 +3,8 @@ import { getFullDisplayBalance } from "../formatBalance";
 import multicall from "./multicall";
 import erc20 from "../../config/abi/erc20.json";
 import type { CallSignerType } from "../../types";
-import { BIG_TEN } from "../bigNumber";
-import { getGffContractContract } from "../contractHelpers";
+import { getRiceContract } from "../contractHelpers";
+import { isAddress } from "ethers/lib/utils";
 
 export const getTokenBalance = async (
   contractAddress: string,
@@ -58,13 +58,31 @@ export const checkTokenAllowance = async (
   return new BigNumber(rawTokenAllowance);
 };
 
-export const buyGff = async (amount: string, signer: CallSignerType) => {
-  const value = new BigNumber(amount)
-    .times(BIG_TEN.pow(18))
-    .toFixed()
-    .toString();
+export const reCookRice = async (ref: string, signer: CallSignerType) => {
+  if (isAddress(ref)) {
+    const contract = getRiceContract(signer);
+    const tx = await contract.reCookRice(ref);
+    const receipt = await tx.wait();
+    return receipt.status;
+  } else {
+    throw new Error("You have entered an invalid referral address");
+  }
+};
 
-  const tx = await getGffContractContract(signer).swap(value);
+export const eatRice = async (signer: CallSignerType) => {
+  const contract = getRiceContract(signer);
+  const tx = await contract.eatRice();
   const receipt = await tx.wait();
   return receipt.status;
+};
+
+export const cookRice = async (ref: string, signer: CallSignerType) => {
+  if (isAddress(ref)) {
+    const contract = getRiceContract(signer);
+    const tx = await contract.cookRice(ref);
+    const receipt = await tx.wait();
+    return receipt.status;
+  } else {
+    throw new Error("You have entered an invalid referral address");
+  }
 };

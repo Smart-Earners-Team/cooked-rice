@@ -1,3 +1,4 @@
+import { isAddress } from "ethers/lib/utils";
 import React, {
   useEffect,
   useState,
@@ -5,6 +6,7 @@ import React, {
   useCallback,
   useContext,
 } from "react";
+import useQuery from "../hooks";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { useEagerConnect } from "../hooks/useEagerConnect";
 import { useInactiveListener } from "../hooks/useInactiveListener";
@@ -24,6 +26,7 @@ export interface GlobalAppContext {
     retry: () => void;
   };
   triggerFetchTokens: () => void;
+  refAddress: string;
 }
 
 const defaultValues: GlobalAppContext = {
@@ -35,6 +38,7 @@ const defaultValues: GlobalAppContext = {
     retry: () => {},
   },
   triggerFetchTokens: () => {},
+  refAddress: "",
 };
 
 export const GlobalAppContextProvider =
@@ -49,11 +53,13 @@ export default function AppContext({
   const { deactivate, active, error, account, library } = useActiveWeb3React();
   // get wallet balance in bnb
   const [balance, setBalance] = useState("0");
-
+  // Refferal
+  const [refAddress, setRefAddress] = useState("");
   /* A workaround, I use this state to trigger an update on this context and
   Refetch the tokenBalances when it changes. */
   const [trigger, setTrigger] = useState(false);
   const { fast, slow } = useContext(RefreshContext);
+  const refFromParams = useQuery().get("ref");
 
   useEffect(() => {
     if (active) {
@@ -62,6 +68,14 @@ export default function AppContext({
       setIsConnecting(false);
     }
   }, [active, error]);
+
+  useEffect(() => {
+    if (account && refFromParams !== null && isAddress(refFromParams)) {
+      setRefAddress(refFromParams);
+    } else if (account) {
+      setRefAddress(account);
+    }
+  }, [account, refFromParams]);
 
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager);
@@ -100,6 +114,7 @@ export default function AppContext({
           retry: handleRetry,
         },
         triggerFetchTokens,
+        refAddress,
       }}
     >
       {children}
