@@ -76,10 +76,16 @@ export const eatRice = async (signer: CallSignerType) => {
   return receipt.status;
 };
 
-export const cookRice = async (ref: string, signer: CallSignerType) => {
+export const cookRice = async (
+  amount: string,
+  ref: string,
+  signer: CallSignerType
+) => {
   if (isAddress(ref)) {
     const contract = getRiceContract(signer);
-    const tx = await contract.cookRice(ref);
+    console.log(contract);
+
+    const tx = await contract["cookRice"](ref);
     const receipt = await tx.wait();
     return receipt.status;
   } else {

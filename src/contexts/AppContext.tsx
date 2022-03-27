@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { isAddress } from "ethers/lib/utils";
 import React, {
   useEffect,
@@ -10,6 +11,7 @@ import useQuery from "../hooks";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { useEagerConnect } from "../hooks/useEagerConnect";
 import { useInactiveListener } from "../hooks/useInactiveListener";
+import { BIG_TEN } from "../utils/bigNumber";
 import { getTokenBalance } from "../utils/calls";
 import {
   connectorsByName,
@@ -89,13 +91,15 @@ export default function AppContext({
   useEffect(() => {
     (async () => {
       if (library && active && account) {
-        // BUSD
-        const bal = await getTokenBalance(
-          "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-          account,
-          18
-        );
-        setBalance(bal);
+        library
+          .getBalance(account)
+          .then(({ _hex }) => {
+            const bal = new BigNumber(_hex).div(BIG_TEN.pow(18));
+            setBalance(bal.toJSON());
+          })
+          .catch((e) => {
+            console.error(e, "Error getting balance");
+          });
       }
     })();
     // also add the fast and slow vars from the refresh context

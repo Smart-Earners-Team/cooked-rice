@@ -13,10 +13,7 @@ export const BASE_BSC_SCAN_URLS = {
 export const BASE_BSC_SCAN_URL = BASE_BSC_SCAN_URLS[ChainId.MAINNET];
 
 export const tokens = {
-  bnb: {
-    56: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    97: "0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F",
-  },
+  // rice: { 56: "", 97: "0xbAd87ea70A47BD09416B3a15e30BF7386115D0e4" },
 };
 export const addresses = {
   multiCall: {

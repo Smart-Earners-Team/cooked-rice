@@ -20,7 +20,8 @@ export default function Button({
       {...props}
       title={label}
     >
-      {loading ? <RiLoaderLine className="animate-spin" /> : children}
+      {children}
+      {loading && <RiLoaderLine className="animate-spin inline-block h-5 w-5 ml-1" />}
     </button>
   );
 }

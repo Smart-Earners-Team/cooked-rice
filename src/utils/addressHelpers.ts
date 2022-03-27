@@ -1,4 +1,4 @@
-import { addresses, ChainId, tokens } from "../config";
+import { addresses, ChainId } from "../config";
 import { Address } from "../config/types";
 
 export const getAddress = (address: Address): string => {
@@ -9,5 +9,3 @@ export const getAddress = (address: Address): string => {
 export const getMulticallAddress = () => getAddress(addresses.multiCall);
 
 export const getRiceContractAddress = () => getAddress(addresses.riceContract);
-
-export const getBnbAddress = () => getAddress(tokens.bnb)

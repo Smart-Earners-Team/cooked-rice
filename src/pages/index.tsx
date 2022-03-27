@@ -5,33 +5,25 @@ import ConnectWalletButton from "../components/Buttons/ConnectWalletButton";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import cls from "classnames";
 import Button from "../components/Buttons";
-import {
-  reCookRice,
-  getTokenBalance,
-  eatRice,
-  cookRice,
-  checkTokenAllowance,
-} from "../utils/calls";
+import { reCookRice, eatRice, cookRice } from "../utils/calls";
 import useToast from "../hooks/useToast";
 import { useAppContext } from "../hooks/useAppContext";
 import CopyToClipboard from "../components/Tools/CopyToClipboard";
-import { StaticImage } from "gatsby-plugin-image";
-import { getBnbContract, getRiceContract } from "../utils/contractHelpers";
-import useWalletModal from "../components/WalletModal/useWalletModal";
+import { getRiceContract } from "../utils/contractHelpers";
 import useWallet from "../hooks/useWallet";
-import { getBnbAddress, getRiceContractAddress } from "../utils/addressHelpers";
-import useApproveToken from "../hooks/useApproveToken";
 import Footer from "../components/layouts/Footer";
+import BigNumber from "bignumber.js";
+import { BIG_TEN } from "../utils/bigNumber";
 
 const IndexPage = () => {
   const [amountToPay, setAmountToPay] = useState("");
+  const [contractBal, setContractBal] = useState("0");
+  const [riceBal, setRiceBal] = useState("0");
   const [reCooking, setReCooking] = useState(false);
   const [cooking, setCooking] = useState(false);
   const [riceRewards, setRiceRewards] = useState("0");
   const [eating, setEating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [isApproved, setIsApproved] = useState(false);
-  const [requestedApproval, setRequestedApproval] = useState(false);
 
   const {
     wallet: { balance },
@@ -41,59 +33,46 @@ const IndexPage = () => {
   const { active, library, account } = useActiveWeb3React();
   const { toastError, toastSuccess } = useToast();
   const { onPresentConnectModal } = useWallet();
-  const { onApprove } = useApproveToken(
-    getBnbContract(library?.getSigner()),
-    getRiceContractAddress()
-  );
+
+  // Get AVAX Balance in the contract
+  useEffect(() => {
+    (async () => {
+      if (library) {
+        const contract = getRiceContract(library.getSigner());
+        const { _hex } = await contract.getBalance();
+        const bal = new BigNumber(_hex).div(BIG_TEN.pow(18));
+        setContractBal(bal.toJSON());
+      }
+    })();
+  }, [library, riceRewards]);
+
+  // Get User Rice
+  useEffect(() => {
+    (async () => {
+      if (account && library) {
+        const contract = getRiceContract(library.getSigner());
+        const { _hex } = await contract.getMyRice(account);
+        const rice = new BigNumber(_hex).toJSON(); // How many decimals?
+        setRiceBal(rice);
+      }
+    })();
+  }, [account, library, riceRewards]);
 
   // Get Rice rewards
   useEffect(() => {
-    if (account) {
-      const contract = getRiceContract();
-      const rewards = contract.riceRewards(account);
-      console.log(rewards);
-    }
-  }, [account]);
-
-  // Check user AVAX allowance // BNB on testNet
-  useEffect(() => {
     (async () => {
-      if (account != null && active && library != null) {
-        const allowance = await checkTokenAllowance(
-          getRiceContractAddress(),
-          account,
-          getBnbAddress(),
-          library.getSigner()
-        );
-        if (allowance.isGreaterThan(0)) {
-          setIsApproved(true);
-        } else {
-          setIsApproved(false);
+      if (account && library) {
+        const contract = getRiceContract(library.getSigner());
+        try {
+          const rewards = await contract.riceRewards(account);
+          console.log(rewards);
+        } catch (err) {
+          console.error(err, "Get rice rewards error");
+          setRiceRewards("0");
         }
-      } else {
-        setIsApproved(false);
       }
     })();
-  }, [account, active, library]);
-
-  const handleApprove = useCallback(async () => {
-    if (account && library) {
-      try {
-        setRequestedApproval(true);
-        await onApprove();
-        setIsApproved(true);
-      } catch (e) {
-        console.error(e);
-        toastError(
-          "Error",
-          "Please try again. Confirm the transaction and make sure you are paying enough gas!"
-        );
-        setIsApproved(false);
-      } finally {
-        setRequestedApproval(false);
-      }
-    }
-  }, [onApprove, account, library, toastError]);
+  }, [account, library]);
 
   const handleInputChange: React.FormEventHandler<HTMLInputElement> =
     useCallback(
@@ -102,11 +81,11 @@ const IndexPage = () => {
         const pattern = /^[0-9]*[.,]?[0-9]{0,18}$/g;
         if (!pattern.test(val)) return;
 
-        const amount = Number.parseFloat(val);
-        const bal = Number.parseFloat(balance);
+        const amount = new BigNumber(val);
+        const bal = new BigNumber(balance);
         // const bal = Number.parseFloat("100");
 
-        if (amount > bal) {
+        if (amount.isGreaterThan(bal)) {
           setErrorMsg("Insufficient funds in your wallet");
         } else {
           setErrorMsg("");
@@ -133,13 +112,13 @@ const IndexPage = () => {
         setReCooking(false);
       }
     }
-  }, [library, amountToPay]);
+  }, [library, refAddress]);
 
   const handleCookRice = useCallback(async () => {
     if (library) {
       setCooking(true);
       try {
-        await cookRice(refAddress, library.getSigner());
+        await cookRice(amountToPay, refAddress, library.getSigner());
         toastSuccess("Success", "Your Rice is cooking now, sitback and relax.");
         triggerFetchTokens();
       } catch (err) {
@@ -152,7 +131,7 @@ const IndexPage = () => {
         setCooking(false);
       }
     }
-  }, [library, amountToPay]);
+  }, [library, amountToPay, refAddress]);
 
   const handleEatRice = useCallback(async () => {
     if (library) {
@@ -184,36 +163,21 @@ const IndexPage = () => {
           <div className="max-w-xl w-full mx-auto lg:mx-0">
             <p>The AVAX Reward Pool with the lowest Dev fees</p>
             <div className="shadow my-6 bg-white">
-              <div className="space-y-2 p-5 bg-red-50">
+              <div className="space-y-2 p-5 bg-red-600 text-white">
                 <BalanceTextBox
                   lable="Contract"
-                  value="0.0"
+                  value={contractBal}
                   symbol="AVAX"
                 />
-                <BalanceTextBox lable="Wallet" value="0.0" symbol="AVAX" />
+                <BalanceTextBox lable="Wallet" value={balance} symbol="AVAX" />
                 <BalanceTextBox
                   lable="Your Rice"
-                  value="0.0"
+                  value={riceBal}
                   symbol="Rice"
                 />
               </div>
-              {active && !isApproved && (
-                <div className="py-5">
-                  <Button
-                    onClick={handleApprove}
-                    className="disabled:!opacity-40 disabled:cursor-not-allowed border-none !shadow-none !block
-                    mx-auto uppercase text-base"
-                    disabled={requestedApproval}
-                    loading={requestedApproval}
-                  >
-                    Approve Contract
-                  </Button>
-                  <div className="text-xs text-center text-gray-600 mt-3">
-                    Approve the contract to begin trading your avax
-                  </div>
-                </div>
-              )}
-              {active && isApproved && (
+
+              {active && (
                 <React.Fragment>
                   <div className="mt-6">
                     <TextInput
@@ -232,7 +196,7 @@ const IndexPage = () => {
                   <div className="p-5">
                     <BalanceTextBox
                       lable="Your Rewards"
-                      value="0.0"
+                      value={riceRewards}
                       symbol="Rice"
                     />
                     <div className="space-x-3 flex justify-between items-center my-6">
@@ -270,12 +234,7 @@ const IndexPage = () => {
           <div className="my-10 lg:my-0">
             <div className="w-60 h-60 bg-red-50 mx-auto my-10"></div>
             <h2 className="text-red-900">Nutritional Facts</h2>
-            <BalanceTextBox
-              lable="Daily Return"
-              value="8"
-              symbol="%"
-              divider
-            />
+            <BalanceTextBox lable="Daily Return" value="8" symbol="%" divider />
             <BalanceTextBox lable="APR" value="2920" symbol="%" divider />
             <BalanceTextBox lable="Dev Fee" value="3" symbol="%" divider />
           </div>
