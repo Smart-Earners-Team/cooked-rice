@@ -100,6 +100,8 @@ export default function AppContext({
           .catch((e) => {
             console.error(e, "Error getting balance");
           });
+      } else {
+        setBalance("0");
       }
     })();
     // also add the fast and slow vars from the refresh context

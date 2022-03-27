@@ -223,7 +223,7 @@ const IndexPage = () => {
               {!active && (
                 <div
                   onClick={onPresentConnectModal}
-                  className="py-2 text-xs text-center bg-gray-50 underline text-blue-600
+                  className="py-2 text-xs text-center bg-white underline text-blue-600
                     cursor-pointer"
                 >
                   Please connect your wallet first
