@@ -44,7 +44,7 @@ const IndexPage = () => {
         setContractBal(bal.toJSON());
       }
     })();
-  }, [library, riceRewards]);
+  }, [library, riceRewards, riceBal, balance]);
 
   // Get User Rice
   useEffect(() => {
@@ -56,7 +56,7 @@ const IndexPage = () => {
         setRiceBal(rice);
       }
     })();
-  }, [account, library, riceRewards]);
+  }, [account, library, riceRewards, contractBal, balance]);
 
   // Get Rice rewards
   useEffect(() => {
@@ -72,7 +72,7 @@ const IndexPage = () => {
         }
       }
     })();
-  }, [account, library]);
+  }, [account, library, contractBal, riceBal, balance]);
 
   const handleInputChange: React.FormEventHandler<HTMLInputElement> =
     useCallback(
