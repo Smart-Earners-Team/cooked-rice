@@ -103,8 +103,8 @@ const IndexPage = () => {
         if (!pattern.test(val)) return;
 
         const amount = Number.parseFloat(val);
-        // const bal = Number.parseFloat(balance);
-        const bal = Number.parseFloat("100");
+        const bal = Number.parseFloat(balance);
+        // const bal = Number.parseFloat("100");
 
         if (amount > bal) {
           setErrorMsg("Insufficient funds in your wallet");

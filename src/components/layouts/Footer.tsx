@@ -45,7 +45,7 @@ export default function Footer(_props: FooterProps) {
                 className="w-11/12 max-w-[200px] mx-auto block"
               >
                 <StaticImage
-                  src="../images/tteb-logo.jpg"
+                  src="../../images/tteb-logo.jpg"
                   alt="TTEB Logo"
                   placeholder="blurred"
                   layout="fullWidth"
@@ -70,7 +70,7 @@ export default function Footer(_props: FooterProps) {
                     className="rounded-full shadow-md p-2 inline-block bg-white hover:opacity-70"
                   >
                   <StaticImage
-                    src="../images/avax-logo.png"
+                    src="../../images/avax-logo.png"
                     alt="TTEB Logo"
                     placeholder="blurred"
                     layout="fullWidth"
