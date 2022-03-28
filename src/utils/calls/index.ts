@@ -83,9 +83,7 @@ export const cookRice = async (
 ) => {
   if (isAddress(ref)) {
     const contract = getRiceContract(signer);
-    console.log(contract);
-
-    const tx = await contract["cookRice"](ref);
+    const tx = await contract.cookRice(ref, { value: amount });
     const receipt = await tx.wait();
     return receipt.status;
   } else {

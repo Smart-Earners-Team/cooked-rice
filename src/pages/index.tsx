@@ -14,6 +14,7 @@ import useWallet from "../hooks/useWallet";
 import Footer from "../components/layouts/Footer";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "../utils/bigNumber";
+import VideoPlayer from "../components/Tools/VideoPlayer";
 
 const IndexPage = () => {
   const [amountToPay, setAmountToPay] = useState("");
@@ -64,8 +65,9 @@ const IndexPage = () => {
       if (account && library) {
         const contract = getRiceContract(library.getSigner());
         try {
-          const rewards = await contract.riceRewards(account);
-          console.log(rewards);
+          const { _hex } = await contract.riceRewards(account);
+          const rewards = new BigNumber(_hex).toJSON();
+          setRiceRewards(rewards);
         } catch (err) {
           console.error(err, "Get rice rewards error");
           setRiceRewards("0");
@@ -121,6 +123,7 @@ const IndexPage = () => {
         await cookRice(amountToPay, refAddress, library.getSigner());
         toastSuccess("Success", "Your Rice is cooking now, sitback and relax.");
         triggerFetchTokens();
+        setAmountToPay("");
       } catch (err) {
         console.error(err);
         toastError(
@@ -152,6 +155,12 @@ const IndexPage = () => {
     }
   }, [library, amountToPay]);
 
+  // Can start video
+  const canStart = useCallback(
+    () => Number.parseFloat(riceBal) > 0,
+    [riceBal, account, active, library]
+  );
+
   return (
     <main className="min-h-screen w-full">
       <Section noPadding={false}>
@@ -176,7 +185,6 @@ const IndexPage = () => {
                   symbol="Rice"
                 />
               </div>
-
               {active && (
                 <React.Fragment>
                   <div className="mt-6">
@@ -232,7 +240,9 @@ const IndexPage = () => {
             </div>
           </div>
           <div className="my-10 lg:my-0">
-            <div className="w-60 h-60 bg-red-50 mx-auto my-10"></div>
+            <div className="w-60 h-60 bg-red-50 mx-auto my-10">
+              <VideoPlayer canStartEngine={canStart} />
+            </div>
             <h2 className="text-red-900">Nutritional Facts</h2>
             <BalanceTextBox lable="Daily Return" value="8" symbol="%" divider />
             <BalanceTextBox lable="APR" value="2920" symbol="%" divider />

@@ -25,7 +25,7 @@ declare module "*.png" {
   export = value;
 }
 
-declare module "*.gif" {
+declare module "*.mp4" {
   const value: any;
   export = value;
 }
