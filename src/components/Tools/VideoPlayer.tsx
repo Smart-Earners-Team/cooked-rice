@@ -11,26 +11,7 @@ interface LamboDriverVideoProps {
   canStartEngine: () => boolean;
 }
 
-// const prefix =
-//   "https://github.com/Smart-Earners-Team/tieto-evry-corporation/blob/main/src/media/games/lamborghini-driver/";
-
-const supportedVideos: SupportedVideo = [
-  { src: videoSrc, type: "video/mp4" },
-//   { src: prefix + "cooked-rice-animation.webm", type: "video/webm" },
-//   { src: prefix + "cooked-rice-animation.3gp", type: "video/3gp" },
-//   { src: prefix + "cooked-rice-animation.avi", type: "video/avi" },
-//   { src: prefix + "cooked-rice-animation.flv", type: "video/flv" },
-//   { src: prefix + "cooked-rice-animation.mov", type: "video/mov" },
-//   { src: prefix + "cooked-rice-animation.ogg", type: "video/ogg" },
-];
-/* const supportedVideos: SupportedVideo = [
-  { src: prefix + "cooked-rice-animation.webm?raw=true", type: "video/webm" },
-  { src: prefix + "cooked-rice-animation.3gp?raw=true", type: "video/3gp" },
-  { src: prefix + "cooked-rice-animation.avi?raw=true", type: "video/avi" },
-  { src: prefix + "cooked-rice-animation.flv?raw=true", type: "video/flv" },
-  { src: prefix + "cooked-rice-animation.mov?raw=true", type: "video/mov" },
-  { src: prefix + "cooked-rice-animation.ogg?raw=true", type: "video/ogg" },
-]; */
+const supportedVideos: SupportedVideo = [{ src: videoSrc, type: "video/mp4" }];
 
 export default function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
   const [player, setPlayer] = useState<StatePlayerRef | null>(null);
