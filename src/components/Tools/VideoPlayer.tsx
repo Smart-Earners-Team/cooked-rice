@@ -13,7 +13,7 @@ interface LamboDriverVideoProps {
 
 const supportedVideos: SupportedVideo = [{ src: videoSrc, type: "video/mp4" }];
 
-export default function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
+function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
   const [player, setPlayer] = useState<StatePlayerRef | null>(null);
 
   const videoRef = useRef<ReactPlayer | null>(null);
@@ -30,8 +30,8 @@ export default function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
   }, [player, canStartEngine]);
 
   useEffect(() => {
-    document.addEventListener("mouseenter", playIfNotTouched);
-    return () => document.removeEventListener("mouseenter", playIfNotTouched);
+    document.addEventListener("mouseover", playIfNotTouched);
+    return () => document.removeEventListener("mouseover", playIfNotTouched);
   });
 
   // set the ref.current to state when they become available
@@ -69,7 +69,9 @@ export default function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
     if (player !== null) {
       const p = getPlayer(player);
       if (canStart && p) {
-        p.play();
+        try {
+          p.play();
+        } catch (error) {}
       }
       // check for player.played because some browsers do not allow
       // playing a video if the user has not interacted with the document
@@ -86,7 +88,7 @@ export default function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
     Set width and height to 100% and wrap the player in a fixed aspect ratio box to get a
     responsive player: see https://css-tricks.com/aspect-ratio-boxes */
     <React.Fragment>
-      <div className="w-full bg-gray-300 relative pointer-events-none">
+      <div className="w-full bg-black relative pointer-events-none">
         <ReactPlayer
           url={supportedVideos}
           className="pointer-event-none"
@@ -102,3 +104,5 @@ export default function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
     </React.Fragment>
   );
 }
+
+export default React.memo(VideoPlayer);

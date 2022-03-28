@@ -1,23 +1,15 @@
 import BigNumber from "bignumber.js";
 import { isAddress } from "ethers/lib/utils";
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  useCallback,
-  useContext,
-} from "react";
+import React, { useEffect, useState, createContext, useCallback } from "react";
 import useQuery from "../hooks";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { useEagerConnect } from "../hooks/useEagerConnect";
 import { useInactiveListener } from "../hooks/useInactiveListener";
 import { BIG_TEN } from "../utils/bigNumber";
-import { getTokenBalance } from "../utils/calls";
 import {
   connectorsByName,
   resetWalletConnectConnector,
 } from "../utils/web3React";
-import { RefreshContext } from "./RefreshContext";
 
 export interface GlobalAppContext {
   wallet: {
@@ -60,7 +52,6 @@ export default function AppContext({
   /* A workaround, I use this state to trigger an update on this context and
   Refetch the tokenBalances when it changes. */
   const [trigger, setTrigger] = useState(false);
-  const { fast, slow } = useContext(RefreshContext);
   const refFromParams = useQuery().get("ref");
 
   useEffect(() => {
@@ -94,8 +85,8 @@ export default function AppContext({
         library
           .getBalance(account)
           .then(({ _hex }) => {
-            const bal = new BigNumber(_hex).div(BIG_TEN.pow(18));
-            setBalance(bal.toJSON());
+            const bal = new BigNumber(_hex).div(BIG_TEN.pow(18)).toJSON();
+            setBalance(bal);
           })
           .catch((e) => {
             console.error(e, "Error getting balance");
@@ -105,7 +96,7 @@ export default function AppContext({
       }
     })();
     // also add the fast and slow vars from the refresh context
-  }, [library, active, account, fast, slow, trigger]);
+  }, [library, active, account, trigger]);
 
   const triggerFetchTokens = useCallback(() => setTrigger((p) => !p), []);
 

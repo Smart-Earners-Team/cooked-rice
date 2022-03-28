@@ -40,9 +40,13 @@ const IndexPage = () => {
     (async () => {
       if (library) {
         const contract = getRiceContract(library.getSigner());
-        const { _hex } = await contract.getBalance();
-        const bal = new BigNumber(_hex).div(BIG_TEN.pow(18));
-        setContractBal(bal.toJSON());
+        try {
+          const { _hex } = await contract.getBalance();
+          const bal = new BigNumber(_hex).div(BIG_TEN.pow(18));
+          setContractBal(bal.toJSON());
+        } catch (err) {
+          setContractBal("0");
+        }
       }
     })();
   }, [library, riceRewards, riceBal, balance]);
@@ -52,9 +56,13 @@ const IndexPage = () => {
     (async () => {
       if (account && library) {
         const contract = getRiceContract(library.getSigner());
-        const { _hex } = await contract.getMyRice(account);
-        const rice = new BigNumber(_hex).toJSON(); // How many decimals?
-        setRiceBal(rice);
+        try {
+          const { _hex } = await contract.getMyRice(account);
+          const rice = new BigNumber(_hex).toJSON(); // How many decimals?
+          setRiceBal(rice);
+        } catch (error) {
+          setRiceBal("0");
+        }
       }
     })();
   }, [account, library, riceRewards, contractBal, balance]);
@@ -69,7 +77,7 @@ const IndexPage = () => {
           const rewards = new BigNumber(_hex).toJSON();
           setRiceRewards(rewards);
         } catch (err) {
-          console.error(err, "Get rice rewards error");
+          // console.error(err, "Get rice rewards error");
           setRiceRewards("0");
         }
       }
@@ -105,7 +113,7 @@ const IndexPage = () => {
         toastSuccess("Success", "Your Rice has been re-cooked");
         triggerFetchTokens();
       } catch (err) {
-        console.error(err);
+        // console.error(err);
         toastError(
           "Error",
           "Something went wrong while trying to perform the transaction."
@@ -240,7 +248,7 @@ const IndexPage = () => {
             </div>
           </div>
           <div className="my-10 lg:my-0">
-            <div className="w-60 h-60 bg-red-50 mx-auto my-10">
+            <div className="w-60 h-60 bg-black mx-auto my-10">
               <VideoPlayer canStartEngine={canStart} />
             </div>
             <h2 className="text-red-900">Nutritional Facts</h2>
@@ -260,7 +268,7 @@ const IndexPage = () => {
             content={
               account == null
                 ? "Connect your wallet to see your referral address"
-                : `https://cookedrice.io/${account}`
+                : `https://cookedrice.io/?ref=${account}`
             }
             canCopy={account != null}
           />
