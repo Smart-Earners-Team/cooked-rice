@@ -205,7 +205,7 @@ const IndexPage = () => {
                     <BalanceTextBox
                       lable="Your Rewards"
                       value={riceRewards}
-                      symbol="Rice"
+                      symbol="Grain"
                     />
                     <div className="space-x-3 flex justify-between items-center my-6">
                       <Button
