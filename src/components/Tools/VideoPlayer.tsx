@@ -69,9 +69,9 @@ function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
     if (player !== null) {
       const p = getPlayer(player);
       if (canStart && p) {
-        try {
-          p.play();
-        } catch (error) {}
+          // Let us pray the user has interacted with the document at this time
+          // 6 secs
+        setTimeout(() => p.play(), 6000);
       }
       // check for player.played because some browsers do not allow
       // playing a video if the user has not interacted with the document
