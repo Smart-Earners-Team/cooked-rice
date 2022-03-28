@@ -249,7 +249,7 @@ const IndexPage = () => {
             title="Your Referral Link"
             content={
               account == null
-                ? "Connect your wallet to see your refferal address"
+                ? "Connect your wallet to see your referral address"
                 : `https://cookedrice.io/${account}`
             }
             canCopy={account != null}
