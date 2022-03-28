@@ -5,6 +5,7 @@ import { ToastsProvider, ToastListener } from "../contexts/ToastContext";
 import { getLibrary } from "../utils/web3React";
 import ModalProvider from "./Modal/ModalContext";
 import AppWalletProvider from "../contexts/AppContext";
+import { RefreshContextProvider } from "../contexts/RefreshContext";
 
 /**
  * This component is used to share state accross all sections of the site without unmounting on page
@@ -18,7 +19,9 @@ export default function AppWrapper(props: { children: React.ReactNode }) {
           <ToastListener />
           <ModalProvider>
             <IconContext.Provider value={{ className: "w-6 h-6" }}>
+            <RefreshContextProvider>
               {props.children}
+            </RefreshContextProvider>
             </IconContext.Provider>
           </ModalProvider>
         </ToastsProvider>
