@@ -95,7 +95,6 @@ export default function VideoPlayer({ canStartEngine }: LamboDriverVideoProps) {
           onEnded={handleFirstPlayerEnded}
           ref={(player) => (videoRef.current = player)}
           pip={false}
-          muted={true}
           loop={true}
           onPlay={checkCanStart}
         />
