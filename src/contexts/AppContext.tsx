@@ -90,8 +90,9 @@ export default function AppContext({
             const bal = new BigNumber(_hex).div(BIG_TEN.pow(18)).toJSON();
             setBalance(bal);
           })
-          .catch((e) => {
-            console.error(e, "Error getting balance");
+          .catch(() => {
+            // console.error(e, "Error getting balance");
+            setBalance("0");
           });
       } else {
         setBalance("0");
