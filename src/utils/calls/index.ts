@@ -5,6 +5,7 @@ import erc20 from "../../config/abi/erc20.json";
 import type { CallSignerType } from "../../types";
 import { getRiceContract } from "../contractHelpers";
 import { isAddress } from "ethers/lib/utils";
+import { BIG_TEN } from "../bigNumber";
 
 export const getTokenBalance = async (
   contractAddress: string,
@@ -82,8 +83,11 @@ export const cookRice = async (
   signer: CallSignerType
 ) => {
   if (isAddress(ref)) {
+    const value = new BigNumber(amount)
+      .times(BIG_TEN.pow(18))
+      .toJSON();
     const contract = getRiceContract(signer);
-    const tx = await contract.cookRice(ref, { value: amount });
+    const tx = await contract.cookRice(ref, { value });
     const receipt = await tx.wait();
     return receipt.status;
   } else {
