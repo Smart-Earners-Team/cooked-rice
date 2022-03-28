@@ -81,10 +81,12 @@ export default function AppContext({
 
   useEffect(() => {
     (async () => {
-      if (library && active && account) {
+      if (account && library) {
         library
-          .getBalance(account)
+          .getSigner()
+          .getBalance()
           .then(({ _hex }) => {
+            console.log(new BigNumber(_hex).toJSON());
             const bal = new BigNumber(_hex).div(BIG_TEN.pow(18)).toJSON();
             setBalance(bal);
           })
@@ -96,7 +98,7 @@ export default function AppContext({
       }
     })();
     // also add the fast and slow vars from the refresh context
-  }, [library, active, account, trigger]);
+  }, [library, account, trigger]);
 
   const triggerFetchTokens = useCallback(() => setTrigger((p) => !p), []);
 
