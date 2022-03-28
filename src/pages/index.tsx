@@ -129,7 +129,7 @@ const IndexPage = () => {
       setCooking(true);
       try {
         await cookRice(amountToPay, refAddress, library.getSigner());
-        toastSuccess("Success", "Your Rice is cooking now, sitback and relax.");
+        toastSuccess("Success", "Your Rice is cooking now, sit back and relax.");
         triggerFetchTokens();
         setAmountToPay("");
       } catch (err) {
