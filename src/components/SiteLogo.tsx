@@ -4,7 +4,7 @@ import { StaticImage } from "gatsby-plugin-image";
 export default function SiteLogo(props: { text: string }) {
   return (
     <div
-      className="inline-flex items-center font-black text-lg md:text-3xl space-x-2"
+      className="inline-flex items-center shrink-0 font-bold text-lg space-x-2"
     >
       <StaticImage
         src="../images/icon.png"

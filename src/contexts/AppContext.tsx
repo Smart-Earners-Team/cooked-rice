@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { isAddress } from "ethers/lib/utils";
-import React, { useEffect, useState, createContext, useCallback } from "react";
+import React, { useEffect, useState, createContext, useCallback, useContext } from "react";
 import useQuery from "../hooks";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { useEagerConnect } from "../hooks/useEagerConnect";
@@ -10,6 +10,7 @@ import {
   connectorsByName,
   resetWalletConnectConnector,
 } from "../utils/web3React";
+import { RefreshContext } from "./RefreshContext";
 
 export interface GlobalAppContext {
   wallet: {
@@ -45,6 +46,7 @@ export default function AppContext({
 }) {
   const [isConnecting, setIsConnecting] = useState(false);
   const { deactivate, active, error, account, library } = useActiveWeb3React();
+  const { fast } = useContext(RefreshContext);
   // get wallet balance in bnb
   const [balance, setBalance] = useState("0");
   // Refferal
@@ -86,20 +88,19 @@ export default function AppContext({
           .getSigner()
           .getBalance()
           .then(({ _hex }) => {
-            console.log(new BigNumber(_hex).toJSON());
             const bal = new BigNumber(_hex).div(BIG_TEN.pow(18)).toJSON();
             setBalance(bal);
           })
           .catch(() => {
             // console.error(e, "Error getting balance");
-            setBalance("0");
+            // setBalance("0");
           });
       } else {
         setBalance("0");
       }
     })();
     // also add the fast and slow vars from the refresh context
-  }, [library, account, trigger]);
+  }, [library, account, trigger, fast, active]);
 
   const triggerFetchTokens = useCallback(() => setTrigger((p) => !p), []);
 

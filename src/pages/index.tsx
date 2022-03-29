@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Section from "../components/layouts/Section";
-import SiteLogo from "../components/SiteLogo";
 import ConnectWalletButton from "../components/Buttons/ConnectWalletButton";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import cls from "classnames";
@@ -10,11 +9,12 @@ import useToast from "../hooks/useToast";
 import { useAppContext } from "../hooks/useAppContext";
 import CopyToClipboard from "../components/Tools/CopyToClipboard";
 import { getRiceContract } from "../utils/contractHelpers";
-import useWallet from "../hooks/useWallet";
 import Footer from "../components/layouts/Footer";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "../utils/bigNumber";
 import VideoPlayer from "../components/Tools/VideoPlayer";
+import Navbar from "../components/layouts/Navbar";
+import { RefreshContext } from "../contexts/RefreshContext";
 
 const IndexPage = () => {
   const [amountToPay, setAmountToPay] = useState("");
@@ -22,7 +22,7 @@ const IndexPage = () => {
   const [riceBal, setRiceBal] = useState("0");
   const [reCooking, setReCooking] = useState(false);
   const [cooking, setCooking] = useState(false);
-  const [riceRewards, setRiceRewards] = useState("0");
+  const [avaxRewards, setAvaxRewards] = useState("0");
   const [eating, setEating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -33,7 +33,7 @@ const IndexPage = () => {
   } = useAppContext();
   const { active, library, account } = useActiveWeb3React();
   const { toastError, toastSuccess } = useToast();
-  const { onPresentConnectModal } = useWallet();
+  const { fast } = useContext(RefreshContext);
 
   // Get AVAX Balance in the contract
   useEffect(() => {
@@ -47,42 +47,38 @@ const IndexPage = () => {
         } catch (err) {
           setContractBal("0");
         }
+      } else {
+        setContractBal("0");
       }
     })();
-  }, [library, riceRewards, riceBal, balance]);
+  }, [library, riceBal, balance, avaxRewards]);
 
-  // Get User Rice
+  // Get User Rice and avax rewards
   useEffect(() => {
     (async () => {
       if (account && library) {
         const contract = getRiceContract(library.getSigner());
         try {
-          const { _hex } = await contract.getMyRice(account);
-          const rice = new BigNumber(_hex).toJSON(); // How many decimals?
+          // User rice bal
+          const { _hex: myRice } = await contract.getMyRice(account);
+          const rice = new BigNumber(myRice).toJSON(); // How many decimals?
+          // User rwards in avax
+          const { _hex: avaxRewards } = await contract.calculateRiceSell(rice);
+          const avax = new BigNumber(avaxRewards).div(BIG_TEN.pow(18)).toJSON();
+
           setRiceBal(rice);
-        } catch (error) {
-          setRiceBal("0");
-        }
-      }
-    })();
-  }, [account, library, riceRewards, contractBal, balance]);
-
-  // Get Rice rewards
-  useEffect(() => {
-    (async () => {
-      if (account && library) {
-        const contract = getRiceContract(library.getSigner());
-        try {
-          const { _hex } = await contract.riceRewards(account);
-          const rewards = new BigNumber(_hex).toJSON();
-          setRiceRewards(rewards);
+          setAvaxRewards(avax);
         } catch (err) {
-          // console.error(err, "Get rice rewards error");
-          setRiceRewards("0");
+          console.error(err);
+          setRiceBal("0");
+          setAvaxRewards("0");
         }
+      } else {
+        setRiceBal("0");
+        setAvaxRewards("0");
       }
     })();
-  }, [account, library, contractBal, riceBal, balance]);
+  }, [account, library, contractBal, balance, fast, active]);
 
   const handleInputChange: React.FormEventHandler<HTMLInputElement> =
     useCallback(
@@ -129,7 +125,10 @@ const IndexPage = () => {
       setCooking(true);
       try {
         await cookRice(amountToPay, refAddress, library.getSigner());
-        toastSuccess("Success", "Your Rice is cooking now, sit back and relax.");
+        toastSuccess(
+          "Success",
+          "Your Rice is cooking now, sit back and relax."
+        );
         triggerFetchTokens();
         setAmountToPay("");
       } catch (err) {
@@ -171,14 +170,13 @@ const IndexPage = () => {
 
   return (
     <main className="min-h-screen w-full">
-      <Section noPadding={false}>
-        <div className="flex justify-between items-center py-5 mb-10">
-          <SiteLogo text="Cooked Rice" />
-          <ConnectWalletButton />
-        </div>
-        <div className="lg:flex lg:justify-between">
+      <Section>
+        <Navbar />
+        <div className="lg:flex lg:justify-between mt-8">
           <div className="max-w-xl w-full mx-auto lg:mx-0">
-            <p>The AVAX Reward Pool with the lowest Dev fees</p>
+            <p className="text-center md:text-left">
+              The AVAX Reward Pool with the lowest Dev fees
+            </p>
             <div className="shadow my-6 bg-white">
               <div className="space-y-2 p-5 bg-red-600 text-white">
                 <BalanceTextBox
@@ -212,8 +210,8 @@ const IndexPage = () => {
                   <div className="p-5">
                     <BalanceTextBox
                       lable="Your Rewards"
-                      value={riceRewards}
-                      symbol="Grain"
+                      value={avaxRewards}
+                      symbol="AVAX"
                     />
                     <div className="space-x-3 flex justify-between items-center my-6">
                       <Button
@@ -237,29 +235,30 @@ const IndexPage = () => {
                 </React.Fragment>
               )}
               {!active && (
-                <div
-                  onClick={onPresentConnectModal}
-                  className="py-2 text-xs text-center bg-white underline text-blue-600
-                    cursor-pointer"
-                >
-                  Please connect your wallet first
+                <div className="py-2 text-xs text-center bg-white">
+                  <p>Please connect your wallet first</p>
+                  <ConnectWalletButton className="my-3" />
                 </div>
               )}
             </div>
           </div>
-          <div className="my-10 lg:my-0">
-            <div className="w-60 h-60 bg-black mx-auto my-10">
+          <div className="my-10 lg:my-0 max-w-xl mx-auto lg:mx-0">
+            <div className="w-60 h-[273px] bg-black mx-auto mb-8">
               <VideoPlayer canStartEngine={canStart} />
             </div>
-            <h2 className="text-red-900">Nutritional Facts</h2>
+            <h2 className="text-red-900 text-center md:text-left">
+              Nutritional Facts
+            </h2>
             <BalanceTextBox lable="Daily Return" value="8" symbol="%" divider />
             <BalanceTextBox lable="APR" value="2920" symbol="%" divider />
             <BalanceTextBox lable="Dev Fee" value="3" symbol="%" divider />
           </div>
         </div>
-        <div className="space-y-6 max-w-xl">
-          <h2 className="text-red-900">Referral Link</h2>
-          <p>
+        <div className="space-y-6 max-w-xl mx-auto lg:mx-0">
+          <h2 className="text-red-900 text-center md:text-left">
+            Referral Link
+          </h2>
+          <p className="text-center md:text-left">
             Earn 12% of the AVAX used to cook rice from anyone who uses your
             referral link
           </p>

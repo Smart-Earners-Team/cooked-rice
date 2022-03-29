@@ -38,11 +38,11 @@ export default function Footer(_props: FooterProps) {
       render={(data: FooterQueryReturnType) => {
         const { name, socials } = data.site.siteMetadata;
         return (
-          <footer className="text-center mt-10 space-y-3">
-            <div className="text-center text-sm text-gray-600">Audited by:</div>
+          <footer className="text-center mt-10 space-y-3 pb-10">
+            <div className="text-center text-xs text-gray-500">Audited by</div>
             <a
               href="https://tteb.finance/"
-              className="w-11/12 max-w-[200px] mx-auto block"
+              className="w-11/12 max-w-[150px] mx-auto block"
             >
               <StaticImage
                 src="../../images/tteb-logo.jpg"
@@ -79,7 +79,7 @@ export default function Footer(_props: FooterProps) {
               </a>
             </div>
             <div className="text-xs mt-5">
-              copyright &copy; {name} - {new Date().getFullYear()}
+              &copy; {name} - {new Date().getFullYear()}
             </div>
           </footer>
         );
