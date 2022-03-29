@@ -6,7 +6,7 @@ export const navigationItems = [
   },
   {
     id: 2,
-    title: "White papper",
+    title: "Contract",
     href: "/",
   },
   {
