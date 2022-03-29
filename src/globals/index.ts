@@ -1,7 +1,7 @@
 export const navigationItems = [
   {
     id: 1,
-    title: "Audit",
+    title: "Audit Report",
     href: "/",
   },
   {
@@ -11,7 +11,7 @@ export const navigationItems = [
   },
   {
     id: 5,
-    title: "Rice papper",
+    title: "Rice paper",
     href: "/",
   },
   {
