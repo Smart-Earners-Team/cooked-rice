@@ -6,7 +6,7 @@ export enum ChainId {
 }
 
 export const BASE_BSC_SCAN_URLS = {
-  [ChainId.MAINNET]: "https://bscscan.com",
+  [ChainId.MAINNET]: "https://snowtrace.io",
   [ChainId.TESTNET]: "https://testnet.bscscan.com",
 };
 

@@ -12,7 +12,7 @@ export const setupNetwork = async () => {
     try {
       if (!provider.request)
         throw new Error(
-          "Can't setup the BSC network on metamask because window.ethereum.request is undefined"
+          "Can't setup the Avalanche network on metamask because window.ethereum.request is undefined"
         );
 
       await provider.request({
@@ -20,10 +20,10 @@ export const setupNetwork = async () => {
         params: [
           {
             chainId: `0x${chainId.toString(16)}`,
-            chainName: "Binance Smart Chain Mainnet",
+            chainName: "Avalanche Network",
             nativeCurrency: {
-              name: "Garfield Family Games",
-              symbol: "GFF",
+              name: "Avalanche",
+              symbol: "AVAX",
               decimals: 18,
             },
             rpcUrls: [getRpcUrl()],
@@ -38,7 +38,7 @@ export const setupNetwork = async () => {
     }
   } else {
     console.error(
-      "Can't setup the BSC network on metamask because window.ethereum is undefined"
+      "Can't setup the Avalanche network on metamask because window.ethereum is undefined"
     );
     return false;
   }
