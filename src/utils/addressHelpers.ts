@@ -6,6 +6,4 @@ export const getAddress = (address: Address): string => {
   return (address[chainId] ? address[chainId] : address[ChainId.MAINNET])!;
 };
 
-export const getMulticallAddress = () => getAddress(addresses.multiCall);
-
 export const getRiceContractAddress = () => getAddress(addresses.riceContract);

@@ -8,7 +8,7 @@ import { ConnectorNames } from "../components/WalletModal/types";
 
 const POLLING_INTERVAL = 12000;
 const rpcUrl = getNodeUrl();
-const chainId = parseInt(process.env.GATSBY_CHAIN_ID!, 10);
+const chainId = Number.parseInt(process.env.GATSBY_CHAIN_ID!, 10);
 
 export const injected = new InjectedConnector({ supportedChainIds: [chainId] });
 
