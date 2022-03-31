@@ -235,9 +235,9 @@ const IndexPage = () => {
                 </React.Fragment>
               )}
               {!active && (
-                <div className="py-2 text-xs text-center bg-white">
+                <div className="py-2 text-xs text-center bg-white flex flex-col items-center space-y-3">
                   <p>Please connect your wallet first</p>
-                  <ConnectWalletButton className="my-3" />
+                  <ConnectWalletButton />
                 </div>
               )}
             </div>
