@@ -12,11 +12,13 @@ import { getRiceContract } from "../utils/contractHelpers";
 import Footer from "../components/layouts/Footer";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "../utils/bigNumber";
-import VideoPlayer from "../components/Tools/VideoPlayer";
+// import VideoPlayer from "../components/Tools/VideoPlayer";
 import Navbar from "../components/layouts/Navbar";
 import { RefreshContext } from "../contexts/RefreshContext";
+import cookedRiceGif from "../media/cooked-rice-animation.gif";
+import { PageProps } from "gatsby";
 
-const IndexPage = () => {
+const IndexPage = (props: PageProps) => {
   const [amountToPay, setAmountToPay] = useState("");
   const [contractBal, setContractBal] = useState("0");
   const [riceBal, setRiceBal] = useState("0");
@@ -163,17 +165,21 @@ const IndexPage = () => {
   }, [library, amountToPay]);
 
   // Can start video
-  const canStart = useCallback(
+  /* const canStart = useCallback(
     () => Number.parseFloat(riceBal) > 0,
     [riceBal, account, active, library]
-  );
+  ); */
+
+  const {
+    location: { origin },
+  } = props; // Page props
 
   return (
     <main className="min-h-screen w-full">
       <Section>
         <Navbar />
         <div className="lg:flex lg:justify-between mt-8">
-          <div className="max-w-xl w-full mx-auto lg:mx-0">
+          <div className="max-w-xl lg:max-w-lg w-full mx-auto lg:mx-0">
             <p className="text-center md:text-left">
               The AVAX Reward Pool with the lowest Dev fees
             </p>
@@ -242,9 +248,17 @@ const IndexPage = () => {
               )}
             </div>
           </div>
-          <div className="my-10 lg:my-0 max-w-xl mx-auto lg:mx-0">
-            <div className="w-60 h-[273px] bg-black mx-auto mb-8">
-              <VideoPlayer canStartEngine={canStart} />
+          <div className="my-10 lg:my-0 max-w-xl lg:max-w-xs mx-auto lg:mx-0">
+            <div
+              className="w-full min-h-[250px] bg-[#fbfcfd] mx-auto mb-8 transition-all
+               duration-150"
+            >
+              {/* <VideoPlayer canStartEngine={canStart} /> */}
+              <img
+                src={cookedRiceGif}
+                alt="Animated gif of a hot served rice"
+                className="w-full"
+              />
             </div>
             <h2 className="text-red-900 text-center md:text-left">
               Nutritional Facts
@@ -267,7 +281,7 @@ const IndexPage = () => {
             content={
               account == null
                 ? "Connect your wallet to see your referral address"
-                : `https://cookedrice.io/?ref=${account}`
+                : `${origin}/?ref=${account}`
             }
             canCopy={account != null}
           />
