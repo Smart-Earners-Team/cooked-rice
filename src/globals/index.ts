@@ -12,7 +12,7 @@ export const navigationItems = [
   {
     id: 5,
     title: "Rice paper",
-    href: "https://cookedrice.io/whitepaper.pdf",
+    href: "https://cookedrice.io/ricepaper.pdf",
   },
   {
     id: 7,
