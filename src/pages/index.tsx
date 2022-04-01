@@ -17,6 +17,7 @@ import Navbar from "../components/layouts/Navbar";
 import { RefreshContext } from "../contexts/RefreshContext";
 import cookedRiceGif from "../media/cooked-rice-animation.gif";
 import { PageProps } from "gatsby";
+import { getFullDisplayBalance } from "../utils/formatBalance";
 
 const IndexPage = (props: PageProps) => {
   const [amountToPay, setAmountToPay] = useState("");
@@ -62,11 +63,11 @@ const IndexPage = (props: PageProps) => {
         const contract = getRiceContract(library.getSigner());
         try {
           // User rice bal
-          const { _hex: myRice } = await contract.getMyRice(account);
+          const { _hex: myRice } = await contract.getMyMiners(account);
           const rice = new BigNumber(myRice).toJSON(); // How many decimals?
           // User rwards in avax
           const { _hex: avaxRewards } = await contract.calculateRiceSell(rice);
-          const avax = new BigNumber(avaxRewards).div(BIG_TEN.pow(18)).toJSON();
+          const avax = getFullDisplayBalance(new BigNumber(avaxRewards), 18, 18);
 
           setRiceBal(rice);
           setAvaxRewards(avax);

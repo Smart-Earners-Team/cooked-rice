@@ -64,7 +64,7 @@ export default function Footer(_props: FooterProps) {
                 </a>
               ))}
               <a
-                href="https://www.avax.network/"
+                href="https://snowtrace.io/address/0x446bfc36541cc6b4832408cc7e75a4e2d17cdc15"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full shadow-md p-2 inline-block bg-white hover:opacity-70"
