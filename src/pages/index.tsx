@@ -66,7 +66,8 @@ const IndexPage = (props: PageProps) => {
           const { _hex: myRice } = await contract.getMyMiners(account);
           const rice = new BigNumber(myRice).toJSON(); // How many decimals?
           // User rwards in avax
-          const { _hex: avaxRewards } = await contract.calculateRiceSell(rice);
+          const { _hex: riceForRewards } = await contract.getMyRice(account);
+          const { _hex: avaxRewards } = await contract.calculateRiceSell(riceForRewards);
           const avax = getFullDisplayBalance(new BigNumber(avaxRewards), 18, 18);
 
           setRiceBal(rice);

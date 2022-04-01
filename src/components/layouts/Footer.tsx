@@ -71,7 +71,7 @@ export default function Footer(_props: FooterProps) {
               >
                 <StaticImage
                   src="../../images/avax-logo.png"
-                  alt="TTEB Logo"
+                  alt="AVAX Logo"
                   placeholder="blurred"
                   layout="fullWidth"
                   className="rounded-full w-8 h-8"
