@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 interface CopyToClipboardProps {
   title: string;
@@ -13,9 +13,9 @@ export default function CopyToClipboard({
   const [copied, setCopied] = useState(false);
   const codeElement = useRef<HTMLPreElement>(null);
 
-  const copyAddress = () => {
+  const copyAddress = useCallback(() => {
     const text = codeElement.current?.textContent;
-    if (text && canCopy) {
+    if (text && canCopy && typeof window !== "undefined") {
       navigator.clipboard
         .writeText(text)
         .then(() => {
@@ -28,7 +28,7 @@ export default function CopyToClipboard({
           setCopied(false);
         });
     }
-  };
+  }, [codeElement, canCopy]);
 
   return (
     <div className="relative w-full my-3 border-b-2 border-red-50 bg-white">
