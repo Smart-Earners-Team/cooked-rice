@@ -13,7 +13,7 @@ export default function CopyToClipboard({
   const [copied, setCopied] = useState(false);
   const codeElement = useRef<HTMLPreElement>(null);
 
-  const copyAddress = useCallback(() => {
+  const copyAddress = useCallback(async () => {
     const text = codeElement.current?.textContent;
     if (text && canCopy && typeof window !== "undefined") {
       navigator.clipboard

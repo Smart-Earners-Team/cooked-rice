@@ -10,7 +10,7 @@ module.exports = {
         name: "twitter",
         url: "https://twitter.com/CookedR1ce?t=rs8PW7Mp2jK0WaMOz6GQdQ&s=09",
       },
-      { name: "discord", url: "https://discord.gg/U339xgaw" },
+      { name: "discord", url: "https://discord.gg/cook3drice" },
     ],
   },
   plugins: [
