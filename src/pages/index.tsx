@@ -41,16 +41,12 @@ const IndexPage = (props: PageProps) => {
   // Get AVAX Balance in the contract
   useEffect(() => {
     (async () => {
-      if (library) {
-        const contract = getRiceContract(library.getSigner());
-        try {
-          const { _hex } = await contract.getBalance();
-          const bal = new BigNumber(_hex).div(BIG_TEN.pow(18));
-          setContractBal(bal.toJSON());
-        } catch (err) {
-          setContractBal("0");
-        }
-      } else {
+      const contract = getRiceContract();
+      try {
+        const { _hex } = await contract.getBalance();
+        const bal = new BigNumber(_hex).div(BIG_TEN.pow(18));
+        setContractBal(bal.toJSON());
+      } catch (err) {
         setContractBal("0");
       }
     })();
@@ -67,8 +63,14 @@ const IndexPage = (props: PageProps) => {
           const rice = new BigNumber(myRice).toJSON(); // How many decimals?
           // User rwards in avax
           const { _hex: riceForRewards } = await contract.getMyRice(account);
-          const { _hex: avaxRewards } = await contract.calculateRiceSell(riceForRewards);
-          const avax = getFullDisplayBalance(new BigNumber(avaxRewards), 18, 18);
+          const { _hex: avaxRewards } = await contract.calculateRiceSell(
+            riceForRewards
+          );
+          const avax = getFullDisplayBalance(
+            new BigNumber(avaxRewards),
+            18,
+            18
+          );
 
           setRiceBal(rice);
           setAvaxRewards(avax);
