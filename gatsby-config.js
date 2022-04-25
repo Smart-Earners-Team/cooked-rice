@@ -40,5 +40,6 @@ module.exports = {
         component: require.resolve("./src/components/AppWrapper.tsx"),
       },
     },
+    "gatsby-plugin-no-sourcemaps"
   ],
 };
