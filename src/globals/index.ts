@@ -27,6 +27,6 @@ export const navigationItems = [
   {
     id: 6,
     title: "Discord",
-    href: "https://discord.gg/cook3drice",
+    href: "https://discord.gg/cookedrice",
   },
 ];
